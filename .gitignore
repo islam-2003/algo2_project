@@ -1,0 +1,5 @@
+# fichiers compilés Java
+*.class
+
+# fichier DBLP volumineux
+dblp-2026-01-01.xml.gz

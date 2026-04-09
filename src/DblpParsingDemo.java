@@ -9,6 +9,7 @@ import java.util.*;
 public class DblpParsingDemo {
 
     public static void main(String[] args) throws Exception {
+        UnionFind unionFind = new UnionFind();
         if (args.length < 2) {
             System.err.println("""
                 Usage:
@@ -89,6 +90,17 @@ public class DblpParsingDemo {
                 if (authors == null || authors.isEmpty()) {
                     continue;
                 }
+
+                
+                for (String a : authors) {
+                    unionFind.add(a);
+                }
+
+                // Unir les auteurs de la publication
+                for (int i = 1; i < authors.size(); i++) {
+                    unionFind.union(authors.get(0), authors.get(i));
+                }
+
 
                 int k = authors.size();
                 // 1er auteur
