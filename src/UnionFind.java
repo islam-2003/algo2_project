@@ -58,4 +58,21 @@ public class UnionFind {
         }
         communityCount--;
     }
+
+    public int getCommunitySize(String author){
+        String root = find(author);
+        return size.get(root);
+    }
+
+    public int getCommunityCount(){
+        return communityCount;
+    }
+
+    public Map<String, Integer> getSizes(){
+        return size;
+    }
+
+    public Map<String, String> getParent(){
+        return parent;
+    }
 }
