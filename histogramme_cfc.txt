@@ -1,0 +1,5 @@
+# Taille_CFC Nombre_CFC
+2 31
+3 8
+4 2
+5 2

@@ -1,0 +1,34 @@
+=== RÉSULTATS TÂCHE 2 AVEC DIAMÈTRES ===
+
+Nombre de CFC (taille >= 2): 43
+
+1. Taille: 5, Diamètre: 4
+   Membres: [Masanobu Shimada, Christian N. Koyama, Junichi Takaku, Takeo Tadono, Manabu Watanabe]
+
+2. Taille: 5, Diamètre: 3
+   Membres: [Hyuk Park 0001, Ignasi Corbella, Adriano Camps, Francesc Torres 0002, Manuel Martn-Neira]
+
+3. Taille: 4, Diamètre: 2
+   Membres: [Tazio Strozzi, Andreas Wiesmann, Urs Wegmller, Charles Werner 0001]
+
+4. Taille: 4, Diamètre: 3
+   Membres: [Mauro Mariotti d'Alessandro, Yue Huang 0002, Laurent Ferro-Famil, Stefano Tebaldini]
+
+5. Taille: 3, Diamètre: 2
+   Membres: [Thomas L. Ainsworth, Jong-Sen Lee, Yanting Wang]
+
+6. Taille: 3, Diamètre: 2
+   Membres: [Minda Le, Haonan Chen 0001, V. Chandrasekar 0001]
+
+7. Taille: 3, Diamètre: 2
+   Membres: [Luca Pulvirenti, Marco Chini, Nazzareno Pierdicca]
+
+8. Taille: 3, Diamètre: 2
+   Membres: [Hiroyoshi Yamada, Ryoichi Sato, Yoshio Yamaguchi]
+
+9. Taille: 3, Diamètre: 1
+   Membres: [Francesco Mattia, Giuseppe Satalino, Anna Balenzano]
+
+10. Taille: 3, Diamètre: 2
+   Membres: [Alberto Moreira, Marwan Younis, Gerhard Krieger]
+

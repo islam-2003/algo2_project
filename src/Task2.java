@@ -37,7 +37,6 @@ public class Task2 {
         // ============================================================
         // ÉTAPE 1 : Comptage des paires (A → B) en ligne
         // ============================================================
-        // Structure : pour chaque auteur A, on stocke une map A → compteur
         Map<String, Map<String, Integer>> pairCount = new HashMap<>();
         
         long pubCount = 0;
@@ -51,7 +50,6 @@ public class Task2 {
                 
                 pubCount++;
                 
-                // Affichage toutes les 100k publications
                 if (pubCount % 100000 == 0) {
                     System.out.println("Publications traitées: " + pubCount);
                     System.out.println("Nombre de paires uniques: " + pairCount.size());
@@ -60,20 +58,15 @@ public class Task2 {
                 var pub = opt.get();
                 List<String> authors = pub.authors;
                 
-                // On ignore les publications avec moins de 2 auteurs
                 if (authors == null || authors.size() < 2) continue;
                 
-                // Premier auteur (A)
                 String firstAuthor = authors.get(0);
                 
-                // Initialiser la map pour ce premier auteur si nécessaire
                 pairCount.putIfAbsent(firstAuthor, new HashMap<>());
                 Map<String, Integer> coauthorCounts = pairCount.get(firstAuthor);
                 
-                // Pour chaque co-auteur B (positions 1, 2, ...)
                 for (int i = 1; i < authors.size(); i++) {
                     String coauthor = authors.get(i);
-                    // Incrémenter le compteur pour la paire (A → B)
                     coauthorCounts.put(coauthor, coauthorCounts.getOrDefault(coauthor, 0) + 1);
                 }
             }
@@ -90,9 +83,7 @@ public class Task2 {
         // ============================================================
         System.out.println("\n=== CONSTRUCTION DU GRAPHE ORIENTÉ ===");
         
-        // Graphe orienté : pour chaque auteur, liste des voisins sortants
         Map<String, List<String>> graph = new HashMap<>();
-        // Ensemble de tous les auteurs (sommets)
         Set<String> allAuthors = new HashSet<>();
         
         int edgesKept = 0;
@@ -109,7 +100,6 @@ public class Task2 {
                 allAuthors.add(to);
                 
                 if (count >= 6) {
-                    // Conserver l'arête
                     graph.computeIfAbsent(from, k -> new ArrayList<>()).add(to);
                     edgesKept++;
                 } else {
@@ -127,7 +117,6 @@ public class Task2 {
         // ============================================================
         System.out.println("\n=== DÉTECTION DES CFC ===");
         
-        // Créer le graphe transposé (arêtes inversées)
         Map<String, List<String>> reverseGraph = new HashMap<>();
         for (var entry : graph.entrySet()) {
             String from = entry.getKey();
@@ -136,7 +125,6 @@ public class Task2 {
             }
         }
         
-        // Étape 1 : DFS pour obtenir l'ordre de finition
         Set<String> visited = new HashSet<>();
         List<String> order = new ArrayList<>();
         
@@ -146,7 +134,6 @@ public class Task2 {
             }
         }
         
-        // Étape 2 : Parcours dans l'ordre inverse sur le graphe transposé
         visited.clear();
         List<Set<String>> components = new ArrayList<>();
         
@@ -155,29 +142,57 @@ public class Task2 {
             if (!visited.contains(author)) {
                 Set<String> component = new HashSet<>();
                 dfs2(author, reverseGraph, visited, component);
-                if (component.size() > 1) { // On garde seulement les CFC de taille ≥ 2
+                if (component.size() > 1) {
                     components.add(component);
                 }
             }
         }
         
-        // Trier les communautés par taille (décroissant)
         components.sort((a, b) -> Integer.compare(b.size(), a.size()));
         
         System.out.println("Nombre de CFC (taille ≥ 2): " + components.size());
         
-        // Afficher les 10 plus grandes
-        System.out.println("\n=== TOP 10 DES CFC ===");
+        // ============================================================
+        // AFFICHAGE TOP 10 AVEC DIAMÈTRES
+        // ============================================================
+        System.out.println("\n=== TOP 10 DES CFC AVEC DIAMÈTRE ===");
         for (int i = 0; i < Math.min(10, components.size()); i++) {
             Set<String> comp = components.get(i);
-            System.out.println((i+1) + ". Taille: " + comp.size());
-            // Afficher les 5 premiers noms pour donner un aperçu
+            int diameter = computeDiameter(comp, graph);
+            System.out.println((i+1) + ". Taille: " + comp.size() + ", Diamètre: " + diameter);
             List<String> names = new ArrayList<>(comp);
             System.out.println("   Exemples: " + names.subList(0, Math.min(5, names.size())));
         }
         
-        // Sauvegarder les résultats
-        saveResults(components, graph, "resultats_tache2.txt");
+        // ============================================================
+        // HISTOGRAMME DES TAILLES DES CFC
+        // ============================================================
+        System.out.println("\n=== HISTOGRAMME DES TAILLES DES CFC ===");
+        
+        Map<Integer, Integer> sizeHistogram = new TreeMap<>();
+        for (Set<String> comp : components) {
+            int size = comp.size();
+            sizeHistogram.put(size, sizeHistogram.getOrDefault(size, 0) + 1);
+        }
+        
+        System.out.println("Taille -> Nombre de CFC :");
+        for (var entry : sizeHistogram.entrySet()) {
+            System.out.println("  " + entry.getKey() + " -> " + entry.getValue());
+        }
+        
+        // Sauvegarder l'histogramme
+        try (PrintWriter writer = new PrintWriter("histogramme_cfc.txt")) {
+            writer.println("# Taille_CFC Nombre_CFC");
+            for (var entry : sizeHistogram.entrySet()) {
+                writer.println(entry.getKey() + " " + entry.getValue());
+            }
+        }
+        System.out.println("Histogramme sauvegardé dans: histogramme_cfc.txt");
+        
+        // ============================================================
+        // SAUVEGARDE DES RÉSULTATS COMPLETS
+        // ============================================================
+        saveResultsWithDiameter(components, graph, "resultats_tache2_complet.txt");
         
         long totalTime = System.currentTimeMillis() - startTime;
         System.out.println("\nTemps total d'exécution: " + totalTime / 1000 + " secondes");
@@ -213,22 +228,60 @@ public class Task2 {
         }
     }
     
-    // Sauvegarde des résultats
-    private static void saveResults(List<Set<String>> components, 
-                                     Map<String, List<String>> graph, 
-                                     String filename) throws Exception {
+    // Calcul du diamètre d'une composante (BFS depuis chaque sommet)
+    private static int computeDiameter(Set<String> component, Map<String, List<String>> graph) {
+        if (component.size() <= 1) return 0;
+        
+        int diameter = 0;
+        List<String> nodes = new ArrayList<>(component);
+        
+        for (String start : nodes) {
+            Map<String, Integer> distances = new HashMap<>();
+            Queue<String> queue = new LinkedList<>();
+            
+            distances.put(start, 0);
+            queue.add(start);
+            
+            while (!queue.isEmpty()) {
+                String current = queue.poll();
+                int currentDist = distances.get(current);
+                
+                List<String> neighbors = graph.get(current);
+                if (neighbors != null) {
+                    for (String neighbor : neighbors) {
+                        if (!distances.containsKey(neighbor) && component.contains(neighbor)) {
+                            distances.put(neighbor, currentDist + 1);
+                            queue.add(neighbor);
+                        }
+                    }
+                }
+            }
+            
+            for (int dist : distances.values()) {
+                if (dist > diameter) {
+                    diameter = dist;
+                }
+            }
+        }
+        return diameter;
+    }
+    
+    // Sauvegarde des résultats avec diamètres
+    private static void saveResultsWithDiameter(List<Set<String>> components, 
+                                                 Map<String, List<String>> graph,
+                                                 String filename) throws Exception {
         try (PrintWriter writer = new PrintWriter(filename)) {
-            writer.println("=== RÉSULTATS TÂCHE 2 ===\n");
-            writer.println("Nombre de CFC (taille ≥ 2): " + components.size() + "\n");
+            writer.println("=== RÉSULTATS TÂCHE 2 AVEC DIAMÈTRES ===\n");
+            writer.println("Nombre de CFC (taille >= 2): " + components.size() + "\n");
             
             for (int i = 0; i < Math.min(10, components.size()); i++) {
                 Set<String> comp = components.get(i);
-                writer.println((i+1) + ". Taille: " + comp.size());
+                int diameter = computeDiameter(comp, graph);
+                writer.println((i+1) + ". Taille: " + comp.size() + ", Diamètre: " + diameter);
                 writer.println("   Membres: " + comp);
                 writer.println();
             }
         }
-        System.out.println("Résultats sauvegardés dans: " + filename);
+        System.out.println("Résultats complets sauvegardés dans: " + filename);
     }
 }
-
