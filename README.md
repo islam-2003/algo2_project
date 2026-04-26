@@ -28,8 +28,6 @@ algo2_project-tache2/
 ├── lib/
 │   ├── jfreechart-1.0.19.jar           # Bibliothèque graphiques
 │   └── jcommon-1.0.23.jar              # Dépendance JFreeChart
-├── dblp.dtd                            # Copie de la DTD à la racine
-├── Projet_Algorithmique_2_2026.pdf     # Énoncé du projet
 └── README.md                           # Ce fichier
 ```
 
@@ -78,10 +76,23 @@ javac -cp "lib/jfreechart-1.0.19.jar:lib/jcommon-1.0.23.jar" -d src src/*.java
 java -Xmx4g -cp "src;lib/jfreechart-1.0.19.jar;lib/jcommon-1.0.23.jar" Task1 src/dblp-2026-01-01.xml.gz src/dblp.dtd
 ```
 
+Sur Linux/macOS, remplacer `;` par `:` dans le classpath :
+
+```bash
+java -Xmx4g -cp "src:lib/jfreechart-1.0.19.jar:lib/jcommon-1.0.23.jar" Task1 src/dblp-2026-01-01.xml.gz src/dblp.dtd
+```
+
 Avec limite (utile pour tester) :
 
 ```bash
 java -Xmx4g -cp "src;lib/jfreechart-1.0.19.jar;lib/jcommon-1.0.23.jar" Task1 src/dblp-2026-01-01.xml.gz src/dblp.dtd --limit=500000
+```
+
+
+Sur Linux/macOS, remplacer `;` par `:` dans le classpath :
+
+```bash
+java -Xmx4g -cp "src:lib/jfreechart-1.0.19.jar:lib/jcommon-1.0.23.jar" Task1 src/dblp-2026-01-01.xml.gz src/dblp.dtd --limit=500000
 ```
 
 **Sorties produites :**
@@ -96,11 +107,24 @@ java -Xmx4g -cp "src;lib/jfreechart-1.0.19.jar;lib/jcommon-1.0.23.jar" Task1 src
 java -Xmx4g -cp "src;lib/jfreechart-1.0.19.jar;lib/jcommon-1.0.23.jar" Task2 src/dblp-2026-01-01.xml.gz src/dblp.dtd
 ```
 
+Sur Linux/macOS, remplacer `;` par `:` dans le classpath :
+
+```bash
+java -Xmx4g -cp "src:lib/jfreechart-1.0.19.jar:lib/jcommon-1.0.23.jar" Task2 src/dblp-2026-01-01.xml.gz src/dblp.dtd
+```
+
 Avec limite :
 
 ```bash
 java -Xmx4g -cp "src;lib/jfreechart-1.0.19.jar;lib/jcommon-1.0.23.jar" Task2 src/dblp-2026-01-01.xml.gz src/dblp.dtd --limit=500000
 ```
+
+Sur Linux/macOS, remplacer `;` par `:` dans le classpath :
+
+```bash
+java -Xmx4g -cp "src:lib/jfreechart-1.0.19.jar:lib/jcommon-1.0.23.jar" Task2 src/dblp-2026-01-01.xml.gz src/dblp.dtd --limit=500000
+```
+
 
 **Sorties produites :**
 - `output/histogram_task2.png` – histogramme des tailles des CFC (PNG)
